@@ -1,0 +1,22 @@
+title: 有一种悲伤
+artist: 黄丽玲
+verses:
+- name: Verse 1 P1
+  cn: ""
+  tw: |-
+    我不羨慕 太陽
+    照不亮你 過往
+    有些黑暗 我們 都一樣
+  py: |-
+  en: |-
+- name: Verse 1 P2
+  cn: ""
+  tw: |-
+    我太嫉妒 時光
+    能離開的 大方
+    不用開口 也就無需躲藏
+  py: |-
+  en: |-
+order:
+- Verse 1 P1
+- Verse 1 P2
