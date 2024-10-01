@@ -6,12 +6,18 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strings"
 
+	"github.com/yorubanashi/languages/internal/server"
+	"github.com/yorubanashi/languages/internal/svelte"
 	"gopkg.in/yaml.v3"
 )
 
+const configPath = "config/config.yaml"
+
+// TODO: Also goes in config.yaml
 var (
 	basePath      = "data"
 	songsPath     = fmt.Sprintf("%s/songs", basePath)
@@ -165,19 +171,32 @@ func middleware(handler func(http.ResponseWriter, *http.Request)) func(http.Resp
 }
 
 func main() {
+	logger := log.Default()
+	cfg, err := server.LoadConfig(configPath)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	svelte.Walk()
+
+	// Should also go into config.yaml
 	shouldIndex := false
 	if shouldIndex {
 		index()
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/songs/", middleware(songHandler))
-	mux.HandleFunc("/songs", middleware(songHandler))
-	mux.HandleFunc("/artists", middleware(artistHandler))
+	srv := server.New(cfg, logger)
+	srv.Start()
 
-	addr := ":8080"
-	fmt.Println(fmt.Sprintf("Starting server on %s...", addr))
-	if err := http.ListenAndServe(addr, mux); err != nil {
-		fmt.Printf("Error starting server: %v\n", err)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	select {
+	case sig := <-c:
+		logger.Println(fmt.Sprintf("Received %s, shutting down server", sig.String()))
+		srv.Stop()
 	}
+
+	// mux.HandleFunc("/songs/", middleware(songHandler))
+	// mux.HandleFunc("/songs", middleware(songHandler))
+	// mux.HandleFunc("/artists", middleware(artistHandler))
 }
