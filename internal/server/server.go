@@ -48,7 +48,8 @@ func (s *Server) Start() {
 
 func (s *Server) Stop() {
 	timeout := time.Duration(s.config.Server.Timeouts.Shutdown) * time.Second
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 
 	s.logger.Println("Server shutting down...")
 	if err := s.mux.Shutdown(ctx); err != nil {
