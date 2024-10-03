@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Server struct {
@@ -14,12 +15,19 @@ type Server struct {
 }
 
 func New(config *Config, logger *log.Logger) *Server {
-	mux := http.NewServeMux()
 	return &Server{
 		config: config,
 		logger: logger,
-		mux:    &http.Server{Addr: config.Server.Address, Handler: mux},
+		mux:    &http.Server{Addr: config.Server.Address, Handler: nil},
 	}
+}
+
+func (s *Server) Register() {
+	mux := http.NewServeMux()
+	for route, handler := range s.cnRoutes() {
+		mux.HandleFunc(route, middleware(handler))
+	}
+	s.mux.Handler = mux
 }
 
 func (s *Server) Start() {
@@ -32,11 +40,20 @@ func (s *Server) Start() {
 			}
 		}
 	}()
+
+	if s.config.StartOptions.Index {
+		go func() { s.index() }()
+	}
 }
 
 func (s *Server) Stop() {
-	// TODO: Set a timeout here
+	timeout := time.Duration(s.config.Server.Timeouts.Shutdown) * time.Second
+	ctx, _ := context.WithTimeout(context.Background(), timeout)
+
 	s.logger.Println("Server shutting down...")
-	s.mux.Shutdown(context.Background())
-	s.logger.Println("Server successfully shut down!")
+	if err := s.mux.Shutdown(ctx); err != nil {
+		s.logger.Println(err)
+	} else {
+		s.logger.Println("Server successfully shut down!")
+	}
 }

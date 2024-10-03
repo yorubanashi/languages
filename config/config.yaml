@@ -1,5 +1,16 @@
+dbPaths:
+  artists: data/artists.yaml
+  songs:
+    base: data/songs
+    indexed: data/songs/indexed.yaml
+
 server:
   address: :8080
+  timeouts:
+    shutdown: 10
+
+startOptions:
+  index: true
 
 svelte:
   pages: ../yorubanashi.github.io/src/routes
