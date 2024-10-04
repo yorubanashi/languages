@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 )
 
+// TODO: This probably belongs in the "db" module, maybe?
 func Walk() {
 	// TODO: Use config.yaml / function arguments to grab values
 	root := "../yorubanashi.github.io/src/routes"

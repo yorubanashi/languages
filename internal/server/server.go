@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+type HandlerFunc func(ctx context.Context, decode func(interface{}) error) (interface{}, error)
+
 type Server struct {
 	config *Config
 	logger *log.Logger
@@ -25,7 +27,7 @@ func New(config *Config, logger *log.Logger) *Server {
 func (s *Server) Register() {
 	mux := http.NewServeMux()
 	for route, handler := range s.cnRoutes() {
-		mux.HandleFunc(route, middleware(handler))
+		mux.HandleFunc(route, translateHandler(handler))
 	}
 	s.mux.Handler = mux
 }

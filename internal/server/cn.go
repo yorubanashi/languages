@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -10,11 +11,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func (s *Server) cnRoutes() map[string]http.HandlerFunc {
-	return map[string]http.HandlerFunc{
-		"/songs/":  s.cnSongsHandler,
-		"/songs":   s.cnSongsHandler,
-		"/artists": s.cnArtistsHandler,
+func (s *Server) cnRoutes() map[string]HandlerFunc {
+	return map[string]HandlerFunc{
+		"/songs": s.cnSongsHandler,
 	}
 }
 
@@ -38,38 +37,54 @@ type Song struct {
 	Order    []string       `yaml:"order" json:"order"`
 }
 
-type SongResponse struct {
-	Songs []Song `json:"songs,omitempty"`
-	Error error  `json:"error,omitempty"`
-}
-
 type ArtistResponse struct {
 	Artists []Chinese `json:"artists,omitempty"`
 	Error   error     `json:"error,omitempty"`
 }
 
-func (s *Server) cnSongs(w http.ResponseWriter, r *http.Request) {
-	res := SongResponse{}
-	err := db.FetchYAML(s.config.DBPaths.Songs.Indexed, &res.Songs)
+type SongRequest struct {
+	Name string `json:"name,omitempty"`
+}
+type SongResponse struct {
+	Songs []Song `json:"songs,omitempty"`
+}
+
+func (s *Server) cnSongs(ctx context.Context, req *SongRequest) (*SongResponse, error) {
+	var songs []Song
+	err := db.FetchYAML(s.config.DBPaths.Songs.Indexed, &songs)
+	return &SongResponse{Songs: songs}, err
+}
+func (s *Server) cnSongsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
+	in := &SongRequest{}
+	err := decode(in)
 	if err != nil {
-		res.Error = err
-		writeJSON(w, 500, res)
-		return
+		return nil, err
 	}
-
-	writeJSON(w, 200, res)
-	return
+	return s.cnSongs(ctx, in)
 }
 
-func (s *Server) cnSongsHandler(w http.ResponseWriter, r *http.Request) {
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) == 2 {
-		s.cnSongs(w, r)
-	} else if len(parts) == 4 {
-	} else {
-		w.WriteHeader(404)
-	}
-}
+// func (s *Server) cnSongs(w http.ResponseWriter, r *http.Request) {
+// 	res := SongResponse{}
+// 	err := db.FetchYAML(s.config.DBPaths.Songs.Indexed, &res.Songs)
+// 	if err != nil {
+// 		res.Error = err
+// 		writeJSON(w, 500, res)
+// 		return
+// 	}
+
+// 	writeJSON(w, 200, res)
+// 	return
+// }
+
+// func (s *Server) cnSongsHandler(w http.ResponseWriter, r *http.Request) {
+// 	parts := strings.Split(r.URL.Path, "/")
+// 	if len(parts) == 2 {
+// 		s.cnSongs(w, r)
+// 	} else if len(parts) == 4 {
+// 	} else {
+// 		w.WriteHeader(404)
+// 	}
+// }
 
 func (s *Server) cnArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	res := ArtistResponse{}
