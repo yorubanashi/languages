@@ -10,7 +10,7 @@ server:
     shutdown: 10
 
 startOptions:
-  index: true
+  index: false
 
 svelte:
   pages: ../yorubanashi.github.io/src/routes

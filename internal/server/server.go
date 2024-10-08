@@ -29,6 +29,8 @@ func (s *Server) Register() {
 	for route, handler := range s.cnRoutes() {
 		mux.HandleFunc(route, translateHandler(handler))
 	}
+
+	mux.HandleFunc("/svelte", translateHandler(s.svelteWalkHandler))
 	s.mux.Handler = mux
 }
 
