@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"net/http"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,45 +13,31 @@ import (
 
 func (s *Server) cnRoutes() map[string]HandlerFunc {
 	return map[string]HandlerFunc{
-		"/songs": s.cnSongsHandler,
+		"/songs":   s.cnSongsHandler,
+		"/artists": s.cnArtistsHandler,
 	}
 }
 
-type Chinese struct {
-	CN string `yaml:"cn" json:"cn,omitempty"` // Chinese (China)
-	TW string `yaml:"tw" json:"tw,omitempty"` // Chinese (Taiwan)
-	PY string `yaml:"py" json:"py"`           // Pinyin
-	EN string `yaml:"en" json:"en"`           // English
-}
-
-type NamedChinese struct {
-	Chinese
-	Name string `yaml:"name" json:"name"`
-}
-
-type Song struct {
-	Title    string         `yaml:"title" json:"title"`
-	Artist   string         `yaml:"artist" json:"artist"`
-	Featured []string       `yaml:"featured" json:"featured,omitempty"`
-	Verses   []NamedChinese `yaml:"verses" json:"verses"`
-	Order    []string       `yaml:"order" json:"order"`
-}
-
-type ArtistResponse struct {
-	Artists []Chinese `json:"artists,omitempty"`
-	Error   error     `json:"error,omitempty"`
-}
-
 type SongRequest struct {
-	Name string `json:"name,omitempty"`
+	Title  string `yaml:"title" json:"title"`   // Song title, in the primary language
+	Artist string `yaml:"artist" json:"artist"` // Main artist
 }
 type SongResponse struct {
-	Songs []Song `json:"songs,omitempty"`
+	Songs []db.Song `json:"songs,omitempty"`
 }
 
+// If one or both of title, artist is omitted, the endpoint will fallback to returning everything.
 func (s *Server) cnSongs(ctx context.Context, req *SongRequest) (*SongResponse, error) {
-	var songs []Song
-	err := db.FetchYAML(s.config.DBPaths.Songs.Indexed, &songs)
+	var songs []db.Song
+	var err error
+	if len(req.Title) > 0 && len(req.Artist) > 0 {
+		path := fmt.Sprintf("%s/%s/%s.yaml", s.config.DBPaths.Songs.Base, req.Artist, req.Title)
+		var song db.Song
+		err = db.FetchYAML(path, &song)
+		songs = []db.Song{song}
+	} else {
+		err = db.FetchYAML(s.config.DBPaths.Songs.Indexed, &songs)
+	}
 	return &SongResponse{Songs: songs}, err
 }
 func (s *Server) cnSongsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
@@ -63,47 +49,30 @@ func (s *Server) cnSongsHandler(ctx context.Context, decode func(interface{}) er
 	return s.cnSongs(ctx, in)
 }
 
-// func (s *Server) cnSongs(w http.ResponseWriter, r *http.Request) {
-// 	res := SongResponse{}
-// 	err := db.FetchYAML(s.config.DBPaths.Songs.Indexed, &res.Songs)
-// 	if err != nil {
-// 		res.Error = err
-// 		writeJSON(w, 500, res)
-// 		return
-// 	}
+type ArtistRequest struct{}
+type ArtistResponse struct {
+	Artists []db.Line `json:"artists,omitempty"`
+}
 
-// 	writeJSON(w, 200, res)
-// 	return
-// }
-
-// func (s *Server) cnSongsHandler(w http.ResponseWriter, r *http.Request) {
-// 	parts := strings.Split(r.URL.Path, "/")
-// 	if len(parts) == 2 {
-// 		s.cnSongs(w, r)
-// 	} else if len(parts) == 4 {
-// 	} else {
-// 		w.WriteHeader(404)
-// 	}
-// }
-
-func (s *Server) cnArtistsHandler(w http.ResponseWriter, r *http.Request) {
-	res := ArtistResponse{}
-	err := db.FetchYAML(s.config.DBPaths.Artists, &res.Artists)
+func (s *Server) cnArtists(ctx context.Context, _ *ArtistRequest) (*ArtistResponse, error) {
+	var artists []db.Line
+	err := db.FetchYAML(s.config.DBPaths.Artists, &artists)
+	return &ArtistResponse{Artists: artists}, err
+}
+func (s *Server) cnArtistsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
+	in := &ArtistRequest{}
+	err := decode(in)
 	if err != nil {
-		res.Error = err
-		writeJSON(w, 500, res)
-		return
+		return nil, err
 	}
-
-	writeJSON(w, 200, res)
-	return
+	return s.cnArtists(ctx, in)
 }
 
 // TODO: Some of this logic probably belongs in the internal/db module?
 //
 // index walks through the data/songs directory and saves an appendix in another file.
 func (s *Server) index() {
-	out := []Song{}
+	out := []db.Song{}
 	err := filepath.Walk(s.config.DBPaths.Songs.Base, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -113,7 +82,7 @@ func (s *Server) index() {
 		if len(parts) == 4 && strings.HasSuffix(path, ".yaml") {
 			artist := parts[2]
 			title := strings.TrimSuffix(parts[3], ".yaml")
-			out = append(out, Song{Artist: artist, Title: title})
+			out = append(out, db.Song{Title: title, Artist: artist})
 		}
 		return nil
 	})

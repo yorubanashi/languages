@@ -43,6 +43,7 @@ func (s *Server) Start() {
 		}
 	}()
 
+	// TODO: Should this just be its own binary?
 	if s.config.StartOptions.Index {
 		go func() { s.index() }()
 	}
