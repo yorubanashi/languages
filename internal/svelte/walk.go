@@ -13,9 +13,20 @@ const (
 	pageSuffix       = "/+page.svelte"
 )
 
+type Link struct {
+	Addr string `json:"addr"`
+	Name string `json:"name"`
+}
+
+type Dir struct {
+	// TODO: Flesh out the nested structure -- for now this isn't needed.
+	Dirs map[string]*Dir `json:"dirs,omitempty"`
+	Link *Link           `json:"link,omitempty"`
+}
+
 // From a given path, get a valid "addressable" string we can use as an href in an <a> tag.
 func getAddressable(base, path string) string {
-	return strings.TrimSuffix(strings.TrimPrefix(path, base), pageSuffix)
+	return strings.TrimPrefix(strings.TrimSuffix(strings.TrimPrefix(path, base), pageSuffix), "/")
 }
 
 func trimHTMLComment(str string) string {
@@ -23,7 +34,8 @@ func trimHTMLComment(str string) string {
 }
 
 // TODO: This probably belongs in the "db" module, maybe?
-func Walk(root, lang string) {
+func Walk(root, lang string) (*Dir, error) {
+	dir := &Dir{Dirs: make(map[string]*Dir)}
 	base := fmt.Sprintf("%s/%s", root, lang)
 	err := filepath.Walk(base, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -42,20 +54,23 @@ func Walk(root, lang string) {
 			return nil
 		}
 
-		fmt.Println(addr)
 		bytes, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
 		title := trimHTMLComment(strings.Split(string(bytes), "\n")[0])
-		fmt.Println(title)
 
-		// TODO: Build a directory tree off of this information
+		tempDir := dir
+		for _, part := range strings.Split(addr, "/") {
+			if tempDir.Dirs[part] == nil {
+				tempDir.Dirs[part] = &Dir{Dirs: make(map[string]*Dir)}
+			}
+			tempDir = tempDir.Dirs[part]
+		}
+		tempDir.Link = &Link{Name: title, Addr: addr}
 
 		return nil
 	})
 
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
+	return dir, err
 }
