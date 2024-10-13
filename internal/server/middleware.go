@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 type errorResponse struct {
@@ -18,8 +19,10 @@ func middleware(handler http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "*")
 
+		start := time.Now()
 		handler(w, r)
-		log.Printf("%s %s\n", r.Method, r.URL.Path)
+		elapsed := time.Since(start).Milliseconds()
+		log.Printf("%s %s (%dms)\n", r.Method, r.URL.Path, elapsed)
 	}
 }
 

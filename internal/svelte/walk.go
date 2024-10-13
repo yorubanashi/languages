@@ -50,7 +50,7 @@ func Walk(root, lang string) (*Dir, error) {
 		addr := getAddressable(base, path)
 		// Skip base path, since we'll always have a link back to it.
 		// Also skip slugs, since it doesn't make sense to hyperlink to them w/o the value.
-		if addr == "" || strings.Contains(addr, "[") {
+		if strings.Contains(addr, "[") {
 			return nil
 		}
 
@@ -62,6 +62,10 @@ func Walk(root, lang string) (*Dir, error) {
 
 		tempDir := dir
 		for _, part := range strings.Split(addr, "/") {
+			if part == "" {
+				continue
+			}
+
 			if tempDir.Dirs[part] == nil {
 				tempDir.Dirs[part] = &Dir{Dirs: make(map[string]*Dir)}
 			}
@@ -71,6 +75,11 @@ func Walk(root, lang string) (*Dir, error) {
 
 		return nil
 	})
+
+	// TODO: This is expected behavior for now since there's nothing in the /en or /jp folders.
+	if os.IsNotExist(err) {
+		return dir, nil
+	}
 
 	return dir, err
 }
