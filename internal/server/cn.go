@@ -40,14 +40,6 @@ func (s *Server) cnSongs(ctx context.Context, req *SongRequest) (*SongResponse, 
 	}
 	return &SongResponse{Songs: songs}, err
 }
-func (s *Server) cnSongsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
-	in := &SongRequest{}
-	err := decode(in)
-	if err != nil {
-		return nil, err
-	}
-	return s.cnSongs(ctx, in)
-}
 
 type ArtistRequest struct{}
 type ArtistResponse struct {
@@ -58,14 +50,6 @@ func (s *Server) cnArtists(ctx context.Context, _ *ArtistRequest) (*ArtistRespon
 	var artists []db.Line
 	err := db.FetchYAML(s.config.DBPaths.Artists, &artists)
 	return &ArtistResponse{Artists: artists}, err
-}
-func (s *Server) cnArtistsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
-	in := &ArtistRequest{}
-	err := decode(in)
-	if err != nil {
-		return nil, err
-	}
-	return s.cnArtists(ctx, in)
 }
 
 // TODO: Some of this logic probably belongs in the internal/db module?

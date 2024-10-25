@@ -17,11 +17,3 @@ func (s *Server) svelteWalk(ctx context.Context, req *SvelteWalkRequest) (*Svelt
 	dir, err := svelte.Walk(s.config.Svelte.Pages, req.Lang)
 	return &SvelteWalkResponse{Dir: dir}, err
 }
-func (s *Server) svelteWalkHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
-	in := &SvelteWalkRequest{}
-	err := decode(in)
-	if err != nil {
-		return nil, err
-	}
-	return s.svelteWalk(ctx, in)
-}
