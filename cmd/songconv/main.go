@@ -12,31 +12,67 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func processText(text string, secondary bool) ([]byte, error) {
-	song := db.Song{Verses: []db.Verse{}}
+const tsFile = "../OpenCC/data/dictionary/TSCharacters.txt"
+
+var ts map[string]string
+
+func createTS() error {
+	data, err := os.ReadFile(tsFile)
+	if err != nil {
+		return err
+	}
+
+	mapping := make(map[string]string)
+	for _, line := range strings.Split(string(data), "\n") {
+		if len(line) == 0 {
+			continue
+		}
+
+		ts := strings.Split(line, "\t")
+		t := ts[0]
+		// Default to the first character for now
+		s := strings.Split(ts[1], " ")[0]
+		mapping[t] = s
+	}
+	ts = mapping
+	return nil
+}
+
+func convertSimplified(text string) string {
+	out := ""
+	for _, char := range text {
+		s := ts[string(char)]
+		if s == "" {
+			out += string(char)
+		} else {
+			out += s
+		}
+	}
+	return out
+}
+
+func processText(artist, songname, text string, secondary bool) ([]byte, error) {
+	song := db.Song{Artist: artist, Title: songname, Verses: []db.Verse{}}
 	for _, verseText := range strings.Split(text, "\n\n") {
 		if len(verseText) == 0 {
 			continue
 		}
 
-		verse := db.Verse{Lines: make([]db.Line, 1)}
-		verseLine := db.Line{}
 		lines := strings.Split(verseText, "\n")
+		verse := db.Verse{Lines: make([]db.Line, len(lines)/3)}
 		for i := 0; i < len(lines)/3; i++ {
-			pri := lines[i*3+0]
-			rom := lines[i*3+1]
-			eng := lines[i*3+2]
+			verseLine := db.Line{}
+			if secondary {
+				verseLine.Sec = lines[i*3+0]
+				verseLine.Pri = convertSimplified(lines[i*3+0])
+			} else {
+				verseLine.Pri = lines[i*3+0]
+			}
+			verseLine.Rom = lines[i*3+1]
+			verseLine.Eng = lines[i*3+2]
 
-			verseLine.Pri += pri + "\n"
-			verseLine.Rom += rom + "\n"
-			verseLine.Eng += eng + "\n"
+			verse.Lines[i] = verseLine
 		}
-		if secondary {
-			verseLine.Sec = verseLine.Pri
-			verseLine.Pri = ""
-		}
-
-		verse.Lines[0] = verseLine
 		song.Verses = append(song.Verses, verse)
 	}
 
@@ -45,6 +81,13 @@ func processText(text string, secondary bool) ([]byte, error) {
 	encoder.SetIndent(2)
 	err := encoder.Encode(song)
 	return b.Bytes(), err
+}
+
+func parseFilename(filename string) (string, string) {
+	parts := strings.Split(filename, "/")
+	artist := parts[len(parts)-2]
+	song := strings.Split(parts[len(parts)-1], ".")[0]
+	return artist, song
 }
 
 func main() {
@@ -56,12 +99,18 @@ func main() {
 		log.Fatalln("Filename is empty")
 	}
 
+	err := createTS()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	data, err := os.ReadFile(*filename)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	out, err := processText(string(data), *isTraditional)
+	artist, song := parseFilename(*filename)
+	out, err := processText(artist, song, string(data), *isTraditional)
 	if err != nil {
 		log.Fatalln(err)
 	}
