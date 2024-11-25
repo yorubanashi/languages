@@ -116,7 +116,7 @@ func main() {
 	}
 
 	// This assumes the filename has only one dot -- the file extension
-	outpath := fmt.Sprintf("%s.yml", strings.Split(*filename, ".")[0])
+	outpath := fmt.Sprintf("%s.yaml", strings.Split(*filename, ".")[0])
 	err = os.WriteFile(outpath, out, os.ModePerm)
 	if err != nil {
 		log.Fatalln(err)

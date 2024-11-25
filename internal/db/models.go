@@ -20,6 +20,6 @@ type Song struct {
 	Title      string   `yaml:"title" json:"title"`                           // Song title, in the primary language
 	Artist     string   `yaml:"artist" json:"artist"`                         // Main artist
 	Featured   []string `yaml:"featured,omitempty" json:"featured,omitempty"` // Featured artist(s)
-	VerseOrder []string `yaml:"order" json:"order"`                           // Order of the verses
-	Verses     []Verse  `yaml:"verses" json:"verses"`                         // Verse definitions
+	VerseOrder []string `yaml:"order" json:"order,omitempty"`                 // Order of the verses
+	Verses     []Verse  `yaml:"verses" json:"verses,omitempty"`               // Verse definitions
 }

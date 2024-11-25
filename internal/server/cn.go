@@ -56,6 +56,9 @@ func (s *Server) cnArtists(ctx context.Context, _ *ArtistRequest) (*ArtistRespon
 //
 // index walks through the data/songs directory and saves an appendix in another file.
 func (s *Server) index() {
+	s.logger.Println("Indexing CN songs...")
+	defer s.logger.Println("Indexing CN songs complete!")
+
 	out := []db.Song{}
 	err := filepath.Walk(s.config.DBPaths.Songs.Base, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
