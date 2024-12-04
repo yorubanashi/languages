@@ -27,7 +27,7 @@ type SongResponse struct {
 }
 
 // If one or both of title, artist is omitted, the endpoint will fallback to returning everything.
-func (s *Server) cnSongs(ctx context.Context, req *SongRequest) (*SongResponse, error) {
+func (s *Server) cnSongs(_ context.Context, req *SongRequest) (*SongResponse, error) {
 	var songs []db.Song
 	var err error
 	if len(req.Title) > 0 && len(req.Artist) > 0 {
@@ -46,7 +46,7 @@ type ArtistResponse struct {
 	Artists []db.Line `json:"artists,omitempty"`
 }
 
-func (s *Server) cnArtists(ctx context.Context, _ *ArtistRequest) (*ArtistResponse, error) {
+func (s *Server) cnArtists(_ context.Context, _ *ArtistRequest) (*ArtistResponse, error) {
 	var artists []db.Line
 	err := db.FetchYAML(s.config.DBPaths.Artists, &artists)
 	return &ArtistResponse{Artists: artists}, err

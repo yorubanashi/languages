@@ -21,8 +21,8 @@ func middleware(handler http.HandlerFunc) http.HandlerFunc {
 
 		start := time.Now()
 		handler(w, r)
-		elapsed := time.Since(start).Milliseconds()
-		log.Printf("%s %s (%dms)\n", r.Method, r.URL.Path, elapsed)
+		elapsed := time.Since(start).Microseconds()
+		log.Printf("%s %s (%dμs)\n", r.Method, r.URL.Path, elapsed)
 	}
 }
 
@@ -56,7 +56,6 @@ func translateHandler(handler HandlerFunc) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		w.Write(outBytes)
-		return
 	}
 
 	return middleware(translated)

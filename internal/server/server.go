@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -11,9 +10,13 @@ import (
 type HandlerFunc func(ctx context.Context, decode func(interface{}) error) (interface{}, error)
 
 type Server struct {
+	// User-provided structs
 	config *Config
 	logger *log.Logger
-	mux    *http.Server
+
+	// Underlying components
+	mux   *http.Server
+	cache map[string]interface{}
 }
 
 func New(config *Config, logger *log.Logger) *Server {
@@ -21,6 +24,7 @@ func New(config *Config, logger *log.Logger) *Server {
 		config: config,
 		logger: logger,
 		mux:    &http.Server{Addr: config.Server.Address, Handler: nil},
+		cache:  make(map[string]interface{}),
 	}
 }
 
@@ -35,12 +39,12 @@ func (s *Server) Register() {
 }
 
 func (s *Server) Start() {
-	s.logger.Println(fmt.Sprintf("Starting server on %s...", s.mux.Addr))
+	s.logger.Printf("Starting server on %s...\n", s.mux.Addr)
 
 	go func() {
 		if err := s.mux.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
-				s.logger.Println(fmt.Sprintf("Error during ListenAndServer: %v", err))
+				s.logger.Printf("Error during ListenAndServer: %v\n", err)
 			}
 		}
 	}()
