@@ -19,6 +19,10 @@ func middleware(handler http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "*")
 		w.Header().Set("Access-Control-Allow-Headers", "*")
 
+		// TODO: Make this configurable -- should we introduce gRPC metadata library & convert metadata from ctx into headers?
+		// OK, I don't think this works with Vite dev hot reloading. Maybe the cache keeps refreshing?
+		w.Header().Set("Cache-Control", "max-age=300, public")
+
 		start := time.Now()
 		handler(w, r)
 		elapsed := time.Since(start).Microseconds()

@@ -28,6 +28,14 @@ type SongResponse struct {
 
 // If one or both of title, artist is omitted, the endpoint will fallback to returning everything.
 func (s *Server) cnSongs(_ context.Context, req *SongRequest) (*SongResponse, error) {
+	key := fmt.Sprintf("cn-songs+%s+%s", req.Artist, req.Title)
+	if val, ok := s.cache[key]; ok {
+		songs, ok := val.([]db.Song)
+		if ok {
+			return &SongResponse{Songs: songs}, nil
+		}
+	}
+
 	var songs []db.Song
 	var err error
 	if len(req.Title) > 0 && len(req.Artist) > 0 {
@@ -37,6 +45,10 @@ func (s *Server) cnSongs(_ context.Context, req *SongRequest) (*SongResponse, er
 		songs = []db.Song{song}
 	} else {
 		err = db.FetchYAML(s.config.DBPaths.Songs.Indexed, &songs)
+	}
+
+	if err == nil {
+		s.cache[key] = songs
 	}
 	return &SongResponse{Songs: songs}, err
 }
