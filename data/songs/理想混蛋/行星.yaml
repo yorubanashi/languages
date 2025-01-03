@@ -1,0 +1,162 @@
+title: 行星
+artist: 理想混蛋
+order: []
+verses:
+  - name: ""
+    lines:
+      - pri: 没有行李 没有目的
+        sec: 沒有行李 沒有目的
+        rom: méiyǒu xínglǐ méiyǒu mùdì
+        eng: No luggage, no destination
+      - pri: 一个人旅行
+        sec: 一個人旅行
+        rom: yīgèrén lǚxíng
+        eng: Travelling alone
+  - name: ""
+    lines:
+      - pri: 在无边黑暗里 直到耗尽勇气
+        sec: 在無邊黑暗裡 直到耗盡勇氣
+        rom: zài wúbiān hēi'àn lǐ zhídào hào jìn yǒngqì
+        eng: In the endless darkness, until I run out of courage
+      - pri: 却无人回应
+        sec: 卻無人回應
+        rom: què wúrén huíyīng
+        eng: But no one responds
+  - name: ""
+    lines:
+      - pri: 忘记了呼吸
+        sec: 忘記了呼吸
+        rom: wàngjìle hūxī
+        eng: Forgot to breathe
+      - pri: 直到谁的温热把我唤醒
+        sec: 直到誰的溫熱把我喚醒
+        rom: zhídào shuí de wēn rè bǎ wǒ huànxǐng
+        eng: Until one's warmth wakes me up
+      - pri: 指引却无法触及
+        sec: 指引卻無法觸及
+        rom: zhǐyǐn què wúfǎ chùjí
+        eng: Point the way, but it's out of reach
+      - pri: 那绝对的距离
+        sec: 那絕對的距離
+        rom: nà juéduì de jùlí
+        eng: The absolute distance
+      - pri: 投射光芒的你
+        sec: 投射光芒的你
+        rom: tóushè guāngmáng de nǐ
+        eng: You who cast the light
+  - name: ""
+    lines:
+      - pri: 我独自盘旋在看得见你的轨道
+        sec: 我獨自盤旋在看得見你的軌道
+        rom: wǒ dúzì pánxuán zài kàn dé jiàn nǐ de guǐdào
+        eng: I'm circling alone in an orbit where I can see you
+      - pri: 仰望著你一圈再一圈的围绕
+        sec: 仰望著你一圈再一圈的圍繞
+        rom: yǎngwàngzhe nǐ yī quān zài yī quān de wéirào
+        eng: Looking up at you as I circle round you over again
+      - pri: 我不能靠近 却也不愿远离
+        sec: 我不能靠近 卻也不願遠離
+        rom: wǒ bùnéng kàojìn què yě bù yuàn yuǎnlí
+        eng: I can't get close, but I can't leave either
+      - pri: 习惯在你影子里游戏我的孤寂
+        sec: 習慣在你影子裡遊戲我的孤寂
+        rom: xíguàn zài nǐ yǐngzǐ lǐ yóuxì wǒ de gūjì
+        eng: I'm used to enjoying my loneliness in your shadow
+  - name: ""
+    lines:
+      - pri: 你成为了定律我放弃了时间
+        sec: 你成為了定律我放棄了時間
+        rom: nǐ chéngwéile dìnglǜ wǒ fàngqìle shíjiān
+        eng: You've become the (scientific) law and I've given up on my time
+      - pri: 转过了一天过了一季过一年
+        sec: 轉過了一天過了一季過一年
+        rom: zhuǎnguòle yītiānguòle yījìguò yī nián
+        eng: Spinning around you for days, seasons, years
+      - pri: 你一如往常发著光 而我就这样
+        sec: 你一如往常發著光 而我就這樣
+        rom: nǐ yī rú wǎngcháng fāzhe guāng ér wǒ jiù zhèyàng
+        eng: You are shining as always, and I am like this
+      - pri: 安静地被遗忘
+        sec: 安靜地被遺忘
+        rom: ānjìng dì bèi yíwàng
+        eng: Quietly forgotten
+  - name: ""
+    lines:
+      - pri: 我独自盘旋在看得见你的轨道
+        sec: 我獨自盤旋在看得見你的軌道
+        rom: wǒ dúzì pánxuán zài kàn dé jiàn nǐ de guǐdào
+        eng: I'm circling alone in an orbit where I can see you
+      - pri: 仰望著你一圈再一圈的围绕
+        sec: 仰望著你一圈再一圈的圍繞
+        rom: yǎngwàngzhe nǐ yī quān zài yī quān de wéirào
+        eng: Looking up at you as I circle round you over again
+      - pri: 我不能靠近 却也不愿远离
+        sec: 我不能靠近 卻也不願遠離
+        rom: wǒ bùnéng kàojìn què yě bù yuàn yuǎnlí
+        eng: I can't get close, but I can't leave either
+      - pri: 习惯在你影子里游戏我的孤寂
+        sec: 習慣在你影子裡遊戲我的孤寂
+        rom: xíguàn zài nǐ yǐngzǐ lǐ yóuxì wǒ de gūjì
+        eng: I'm used to enjoying my loneliness in your shadow
+  - name: ""
+    lines:
+      - pri: 你成为了定律我放弃了时间
+        sec: 你成為了定律我放棄了時間
+        rom: nǐ chéngwéile dìnglǜ wǒ fàngqìle shíjiān
+        eng: You've become the (scientific) law and I've given up on my time
+      - pri: 转过了一天过了一季过一年
+        sec: 轉過了一天過了一季過一年
+        rom: zhuǎnguòle yītiānguòle yījìguò yī nián
+        eng: Spinning around you for days, seasons, years
+      - pri: 你一如往常发著光 而我就这样
+        sec: 你一如往常發著光 而我就這樣
+        rom: nǐ yī rú wǎngcháng fāzhe guāng ér wǒ jiù zhèyàng
+        eng: You are shining as always, and I am like this
+      - pri: 安静地被遗忘
+        sec: 安靜地被遺忘
+        rom: ānjìng dì bèi yíwàng
+        eng: Quietly forgotten
+  - name: ""
+    lines:
+      - pri: 我沉睡时幻想 你就在我身旁
+        sec: 我沉睡時幻想 你就在我身旁
+        rom: wǒ chénshuì shí huànxiǎng nǐ jiù zài wǒ shēn páng
+        eng: When I'm sleeping, I imagine you're beside me
+      - pri: 清醒却发现 你仍然远方
+        sec: 清醒卻發現 你仍然遠方
+        rom: qīngxǐng què fāxiàn nǐ réngrán yuǎnfāng
+        eng: But when I wake up I find out you're still far away
+      - pri: 你听见了吗 我在这里歌唱
+        sec: 你聽見了嗎 我在這裡歌唱
+        rom: nǐ tīngjiànle ma wǒ zài zhèlǐ gēchàng
+        eng: Do you hear me singing here?
+      - pri: 一个人一个星球等待你一个回答
+        sec: 一個人一個星球等待你一個回答
+        rom: yīgèrén yīgè xīngqiú děngdài nǐ yīgè huídá
+        eng: A lonely planet waiting for your response
+  - name: ""
+    lines:
+      - pri: 也许有天时间把愿望都埋葬
+        sec: 也許有天時間把願望都埋葬
+        rom: yěxǔ yǒu tiān shíjiān bǎ yuànwàng dū máizàng
+        eng: Maybe one day time will bury all wishes
+      - pri: 只留下我为你踱步的残响
+        sec: 只留下我為你踱步的殘響
+        rom: zhǐ liú xià wǒ wèi nǐ duò bù de cán xiǎng nǐ
+        eng: Leaving behind only the reverberations from my pacing around you
+      - pri: 你一如往常发著光 而我就这样
+        sec: 你一如往常發著光 而我就這樣
+        rom: yī rú wǎngcháng fāzhe guāng ér wǒ jiù zhèyàng
+        eng: You are shining as always, and I am like this
+      - pri: 安静地被遗忘
+        sec: 安靜地被遺忘
+        rom: ānjìng dì bèi yíwàng
+        eng: Quietly forgotten
+      - pri: 满足地被遗忘
+        sec: 滿足地被遺忘
+        rom: mǎnzú dì bèi yíwàng
+        eng: Contentedly forgotten
+      - pri: 幸福的被遗忘
+        sec: 幸福的被遺忘
+        rom: xìngfú de bèi yíwàng
+        eng: Happily forgotten
