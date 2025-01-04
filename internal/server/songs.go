@@ -68,6 +68,7 @@ func (s *Server) artists(_ context.Context, _ *ArtistRequest) (*ArtistResponse, 
 //
 // index walks through the data/songs directory and saves an appendix in another file.
 func (s *Server) indexAll() {
+	// TODO: We should not be hardcoding this language array...
 	for _, lang := range []string{"cn"} {
 		s.index(lang)
 	}
