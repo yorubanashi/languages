@@ -4,22 +4,22 @@ package server
 
 import "context"
 
-func (s *Server) cnSongsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
+func (s *Server) songsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
 	in := &SongRequest{}
 	err := decode(in)
 	if err != nil {
 		return nil, err
 	}
-	return s.cnSongs(ctx, in)
+	return s.songs(ctx, in)
 }
 
-func (s *Server) cnArtistsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
+func (s *Server) artistsHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {
 	in := &ArtistRequest{}
 	err := decode(in)
 	if err != nil {
 		return nil, err
 	}
-	return s.cnArtists(ctx, in)
+	return s.artists(ctx, in)
 }
 
 func (s *Server) svelteWalkHandler(ctx context.Context, decode func(interface{}) error) (interface{}, error) {

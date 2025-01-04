@@ -61,7 +61,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	params.Handlers = append(params.Handlers, parseFile("internal/server/cn.go")...)
+	params.Handlers = append(params.Handlers, parseFile("internal/server/songs.go")...)
 	params.Handlers = append(params.Handlers, parseFile("internal/server/svelte.go")...)
 
 	outFile, err := os.Create("internal/server/handlers.gen.go")

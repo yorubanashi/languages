@@ -1,8 +1,9 @@
 dbPaths:
+  base: data
   artists: data/artists.yaml
   songs:
-    base: data/songs
-    indexed: data/songs/indexed.yaml
+    base: songs
+    indexed: songs/indexed.yaml
 
 server:
   address: :8080

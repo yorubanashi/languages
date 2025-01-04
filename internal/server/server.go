@@ -30,7 +30,7 @@ func New(config *Config, logger *log.Logger) *Server {
 
 func (s *Server) Register() {
 	mux := http.NewServeMux()
-	for route, handler := range s.cnRoutes() {
+	for route, handler := range s.songRoutes() {
 		mux.HandleFunc(route, translateHandler(handler))
 	}
 
@@ -51,7 +51,7 @@ func (s *Server) Start() {
 
 	// TODO: Should this just be its own binary?
 	if s.config.StartOptions.Index {
-		go func() { s.index() }()
+		go func() { s.indexAll() }()
 	}
 }
 
